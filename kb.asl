@@ -7,6 +7,11 @@ adjacent(X,Y,X-1,Y).
 adjacent(X,Y,X,Y+1).
 adjacent(X,Y,X,Y-1).
 
+adjacent_cima_direita(X,Y,X+1,Y+1).
+adjacent_cima_direita(X,Y,X+1,Y+1).
+adjacent_cima_direita(X,Y,X+1,Y+1).
+adjacent_cima_direita(X,Y,X+1,Y+1).
+
 out_of_grid(X,Y) :-  
    borders(BottomLeftX, BottomLeftX, TopRightX, TopRightY) & 
    (X < BottomLeftX | Y < BottomLeftX | X > TopRightX | Y > TopRightY).
@@ -14,7 +19,7 @@ out_of_grid(X,Y) :-
 visited(X,Y) :- ~breeze(X,Y) | breeze(X,Y).
 
 /* safe place */
-safe(X,Y) :- ~pit(X,Y) & ~wumpus(X,Y).
+safe(X,Y) :- ~pit(X,Y) & (~wumpus(X,Y) | killed).
 
 /* pit inference */
 ~pit(X,Y) :- ~breeze(X,Y).
@@ -42,8 +47,8 @@ might_be_pit(X,Y) :-  adjacent(X,Y,X2,Y2) & breeze(X2,Y2). // might have a pit, 
 ~wumpus(X,Y) :- wall(X,Y).
 ~wumpus(X,Y) :- out_of_grid(X,Y).
 
-wumpus(X,Y) :- stench(X,Y-1) & ~wumpus(X-1,Y-1) & ~wumpus(X,Y-2) & ~wumpus(X+1,Y-1). // p1
-wumpus(X,Y) :- stench(X+1,Y) & ~wumpus(X+2,Y) & ~wumpus(X+1,Y-1) & ~wumpus(X+1,Y+1). // p2
-wumpus(X,Y) :- stench(X,Y+1) & ~wumpus(X-1,Y+1) & ~wumpus(X,Y+2) & ~wumpus(X+1,Y+1). // p3
-wumpus(X,Y) :- stench(X-1,Y) & ~wumpus(X-2,Y) & ~wumpus(X-1,Y-1) & ~wumpus(X-1,Y+1). // p4
+wumpus_north(X,Y) :- true.//stench(X,Y-1) & ~wumpus(X-1,Y-1) & ~wumpus(X,Y-2) & ~wumpus(X+1,Y-1). // p1
+wumpus_west(X,Y) :- stench(X+1,Y) & ~wumpus(X+2,Y) & ~wumpus(X+1,Y-1) & ~wumpus(X+1,Y+1). // p2
+wumpus_east(X,Y) :- stench(X,Y+1) & ~wumpus(X-1,Y+1) & ~wumpus(X,Y+2) & ~wumpus(X+1,Y+1). // p3
+wumpus_south(X,Y) :- stench(X-1,Y) & ~wumpus(X-2,Y) & ~wumpus(X-1,Y-1) & ~wumpus(X-1,Y+1). // p4
 
