@@ -9,7 +9,7 @@
 pos(1,1).            // my initial location
 orientation(east).   // and orientation 
 visited(pos(1, 1), 1).
-desire(orientation(east)).   
+desire(east).   
 // scenario borders
 // borders(BottomLeftX, BottomLeftY, TopRightX, TopRightY) 
 //borders(1, 1, 4, 4). // for R&N
@@ -93,7 +93,7 @@ desire(orientation(east)).
 	   //pega numero de visitas no local que deseja ir
 	   ?get_visited(NX,NY,V);
 	   if(not wall(NX,NY)){
-	   	-+desire(orientation(O));
+	   	-+desire(O);
 	   .print("1 -",O);
 	   }
 	   //vai na direção que visitou menos
@@ -101,50 +101,53 @@ desire(orientation(east)).
 	   ?next_position(X,Y,O2,NX2,NY2);
 	   ?get_visited(NX2,NY2,V2);
 	   if(V2 < V & not wall(NX2,NY2) | wall(NX,NY) & not wall(NX2,NY2)){
-	   	-+desire(orientation(O2));
+	   	-+desire(O2);
 	   .print("2-",O2);
 	   }
 	   ?next_orientation(O2,O3);
 	   ?next_position(X,Y,O3,NX3,NY3);
 	   ?get_visited(NX3,NY3,V3);
 	   if(V3 < V2 & not wall(NX3,NY3) | wall(NX2,NY2) & not wall(NX3,NY3)){
-	   	-+desire(orientation(O3));
+	   	-+desire(O3);
 	   .print("3-",O3);
 	   }
 	   ?next_orientation(O3,O4);
 	   ?next_position(X,Y,O4,NX4,NY4);
 	   ?get_visited(NX4,NY4,V4);
-	   if(V4 < V3 & not wall(NX4,NY4) | wall(NX3,NY3) & not wall(NX3,NY3)){
-	   	-+desire(orientation(O4));
+	   if(V4 < V3 & not wall(NX4,NY4) | wall(NX3,NY3) & not wall(NX4,NY4)){
+	   	-+desire(O4);
 	   .print("4-",O4);
-	   }
-	   
-	.
+	   }.
 
 // TODO: não apenas ir reto e virar quando bater ou não achar um local seguro tentar ir tb para locais novos.   
-+!explore : pos(X,Y) & orientation(O) & next_state( s(X,Y,O,_), forward, s(NX,NY,_,_)) 
-   <-
-   !update_direcao; 
-   !avanca(NX, NY).
-   
-//TODO não apenas virar tentar decidir locais novos
 +!explore 
-   <- .print("no safe place to explore!");
-   	  !do(turn(left)).
+   <- !update_direcao;
+   	  ?desire(D);
+   	  .print("desire - ",D);
+   	  !girar_para(D);
+      !avanca.
 
-+!avanca(X, Y)
-	<-.print("doing ",X ,"," ,Y);
++!girar_para(O) : orientation(O) <- .print("alcanco -", O).
++!girar_para(O) : pos(MyX,MyY) & orientation(O2) &
+      next_state(s(MyX,MyY,O2,no), Action, s(MyX,MyY,O,no))
+      <- !do(Action); !girar_para(O).
+
++!avanca : pos(X,Y) & orientation(O) & next_state( s(X,Y,O,_), forward, s(NX,NY,_,_))
+	<-.print("doing ",NX ,"," ,NY);
       forward;
       !espera;
       if (bump) {
       	.print("bump");
-         +wall(X,Y);
+         +wall(NX,NY);
       } else {
-         -+pos(X,Y);
-         !increment_visited(X,Y);
+         -+pos(NX,NY);
+         !increment_visited(NX,NY);
          !update(breeze);
          !update(stench);
       }.
++!avanca <- .print("not safe girando");
+	!do(turn(left));
+	!avanca.
 
 +!do(forward)
   	<- shoot;
@@ -172,14 +175,20 @@ desire(orientation(east)).
 +!sair : pos(MyX,MyY) & orientation(O) &
       search( [p(0,[s(MyX,MyY,O,no)],[])], s(1,1,_,_), [Action|_])
    <- if(Action = forward){
-    	!explore;
+    	!sair_save;
     	!sair;
     }else{
 		!do(Action);
 		!sair;    
     }.
+    
++!sair_save : pos(X,Y) & orientation(O) & next_state( s(X,Y,O,_), forward, s(NX,NY,_,_)) 
+   <-!avanca(NX, NY). 
++!sair_save 
+   <- !do(turn(left));
+   	  !sair_save.
 
-+!espera <- .wait(3000).
++!espera <- .wait(500).
  
 +glitter 
    <- grab;
