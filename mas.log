@@ -5,16 +5,3 @@
 [ag] doing 0,1
 [ag] bump
 [ag] no safe place to explore!
-[ag] doing 1,0
-[ag] bump
-[ag] no safe place to explore!
-[ag] doing 2,1
-[ag] no safe place to explore!
-[ag] no safe place to explore!
-[ag] doing 1,1
-[ag] no safe place to explore!
-[ag] no safe place to explore!
-[ag] doing 2,1
-[ag] doing 3,1
-[EISAdapter] action error: eis.exceptions.ActException: 
-[ag] No failure event was generated for +!explore[code(forward),code_line(90),code_src("ag.asl"),error(action_failed),error_msg(""),source(self)]

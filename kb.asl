@@ -12,7 +12,10 @@ next_orientation(east,south).
 next_orientation(south,west).
 next_orientation(west,north).
 
-next_position(north, X, Y).
+next_position(X, Y, north,X ,Y+1).
+next_position(X, Y, south,X ,Y-1).
+next_position(X, Y, east,X+1 ,Y).
+next_position(X, Y, west,X-1 ,Y).
 
 visited(X,Y) :- ~breeze(X,Y) | breeze(X,Y).
 

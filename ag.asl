@@ -8,7 +8,7 @@
 
 pos(1,1).            // my initial location
 orientation(east).   // and orientation 
-
+visited(pos(1, 1), 1).   
 // scenario borders
 // borders(BottomLeftX, BottomLeftY, TopRightX, TopRightY) 
 //borders(1, 1, 4, 4). // for R&N
@@ -85,7 +85,9 @@ orientation(east).   // and orientation
       !find(gold).
 
 +!update_direcao
-	<- ?pos(X, Y); 
+	<- ?pos(X, Y);
+	   ?orientation(O);
+	    !next_state( s(X,Y,O,_), forward, s(NX,NY,_,_));
 	desire_east.
 
 // TODO: não apenas ir reto e virar quando bater ou não achar um local seguro tentar ir tb para locais novos.   
