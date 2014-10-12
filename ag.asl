@@ -8,7 +8,8 @@
 
 pos(1,1).            // my initial location
 orientation(east).   // and orientation 
-visited(pos(1, 1), 1).   
+visited(pos(1, 1), 1).
+desire(orientation(east)).   
 // scenario borders
 // borders(BottomLeftX, BottomLeftY, TopRightX, TopRightY) 
 //borders(1, 1, 4, 4). // for R&N
@@ -87,12 +88,44 @@ visited(pos(1, 1), 1).
 +!update_direcao
 	<- ?pos(X, Y);
 	   ?orientation(O);
-	    !next_state( s(X,Y,O,_), forward, s(NX,NY,_,_));
-	desire_east.
+	   //primeiro deseja continuar em frente
+	   ?next_position(X,Y,O,NX,NY);
+	   //pega numero de visitas no local que deseja ir
+	   ?get_visited(NX,NY,V);
+	   if(not wall(NX,NY)){
+	   	-+desire(orientation(O));
+	   .print("1 -",O);
+	   }
+	   //vai na direção que visitou menos
+	   ?next_orientation(O,O2);
+	   ?next_position(X,Y,O2,NX2,NY2);
+	   ?get_visited(NX2,NY2,V2);
+	   if(V2 < V & not wall(NX2,NY2) | wall(NX,NY) & not wall(NX2,NY2)){
+	   	-+desire(orientation(O2));
+	   .print("2-",O2);
+	   }
+	   ?next_orientation(O2,O3);
+	   ?next_position(X,Y,O3,NX3,NY3);
+	   ?get_visited(NX3,NY3,V3);
+	   if(V3 < V2 & not wall(NX3,NY3) | wall(NX2,NY2) & not wall(NX3,NY3)){
+	   	-+desire(orientation(O3));
+	   .print("3-",O3);
+	   }
+	   ?next_orientation(O3,O4);
+	   ?next_position(X,Y,O4,NX4,NY4);
+	   ?get_visited(NX4,NY4,V4);
+	   if(V4 < V3 & not wall(NX4,NY4) | wall(NX3,NY3) & not wall(NX3,NY3)){
+	   	-+desire(orientation(O4));
+	   .print("4-",O4);
+	   }
+	   
+	.
 
 // TODO: não apenas ir reto e virar quando bater ou não achar um local seguro tentar ir tb para locais novos.   
 +!explore : pos(X,Y) & orientation(O) & next_state( s(X,Y,O,_), forward, s(NX,NY,_,_)) 
-   <- !avanca(NX, NY).
+   <-
+   !update_direcao; 
+   !avanca(NX, NY).
    
 //TODO não apenas virar tentar decidir locais novos
 +!explore 
@@ -108,6 +141,7 @@ visited(pos(1, 1), 1).
          +wall(X,Y);
       } else {
          -+pos(X,Y);
+         !increment_visited(X,Y);
          !update(breeze);
          !update(stench);
       }.
@@ -145,13 +179,18 @@ visited(pos(1, 1), 1).
 		!sair;    
     }.
 
-+!espera <- .wait(500).
++!espera <- .wait(3000).
  
 +glitter 
    <- grab;
       +has_gold.
 
 // update beliefs using a coordinate system
++!increment_visited(X,Y) : visited(pos(X,Y),N) <- -visited(pos(X,Y),N); +visited(pos(X,Y),N+1).
++!increment_visited(X,Y) <- +visited(pos(X,Y), 1).
+
++?get_visited(X,Y,N) :  visited(pos(X,Y),N).
++?get_visited(X,Y,N) : not visited(pos(X,Y),N) <- +visited(pos(X,Y), 0); ?get_visited(X,Y,N).
 
 +!update(breeze) : not breeze[source(percept)] & pos(X,Y) <- +~breeze(X,Y). 
 +!update(breeze) :     breeze[source(percept)] & pos(X,Y) <- +breeze(X,Y).  
