@@ -157,15 +157,27 @@ desire(east).
       climb.
 
 +!sair : pos(1,1).
-+!sair : pos(MyX,MyY) & orientation(O) &
-    // h( s(MyX,MyY,O,yes), s(1,1,_,_), H )
-      search( [p(0,[s(MyX,MyY,O,yes)],[])], s(1,1,_,_), [Action|_])
-   <- if(Action = forward){
++!sair 
+   <- ?pos(X,Y);
+   if(X < 1){
+   		!girar_para(east);
     	!avanca;
     	!sair;
-    }else{
-		!do(Action);
-		!sair;    
+    }
+    if(X > 1){
+		!girar_para(west);
+    	!avanca;
+    	!sair;   
+    }
+    if(Y < 1){
+		!girar_para(north);
+    	!avanca;
+    	!sair;   
+    }
+    if(Y > 1){
+		!girar_para(south);
+    	!avanca;
+    	!sair;   
     }.
     
 +!espera <- .wait(100).
