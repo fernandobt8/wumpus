@@ -7,10 +7,12 @@ adjacent(X,Y,X-1,Y).
 adjacent(X,Y,X,Y+1).
 adjacent(X,Y,X,Y-1).
 
-adjacent_cima_direita(X,Y,X+1,Y+1).
-adjacent_cima_direita(X,Y,X+1,Y+1).
-adjacent_cima_direita(X,Y,X+1,Y+1).
-adjacent_cima_direita(X,Y,X+1,Y+1).
+next_orientation(north,east).
+next_orientation(east,south).
+next_orientation(south,west).
+next_orientation(west,north).
+
+next_position(north, X, Y).
 
 visited(X,Y) :- ~breeze(X,Y) | breeze(X,Y).
 
@@ -41,7 +43,7 @@ might_be_pit(X,Y) :-  adjacent(X,Y,X2,Y2) & breeze(X2,Y2). // might have a pit, 
 ~wumpus(X,Y) :- adjacent(X,Y,X2,Y2) & ~stench(X2,Y2).
 ~wumpus(X,Y) :- wall(X,Y).
 
-wumpus_north(X,Y) :- true.//stench(X,Y-1) & ~wumpus(X-1,Y-1) & ~wumpus(X,Y-2) & ~wumpus(X+1,Y-1). // p1
+wumpus_north(X,Y) :- stench(X,Y-1) & ~wumpus(X-1,Y-1) & ~wumpus(X,Y-2) & ~wumpus(X+1,Y-1). // p1
 wumpus_west(X,Y) :- stench(X+1,Y) & ~wumpus(X+2,Y) & ~wumpus(X+1,Y-1) & ~wumpus(X+1,Y+1). // p2
 wumpus_east(X,Y) :- stench(X,Y+1) & ~wumpus(X-1,Y+1) & ~wumpus(X,Y+2) & ~wumpus(X+1,Y+1). // p3
 wumpus_south(X,Y) :- stench(X-1,Y) & ~wumpus(X-2,Y) & ~wumpus(X-1,Y-1) & ~wumpus(X-1,Y+1). // p4

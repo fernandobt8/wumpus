@@ -84,23 +84,31 @@ orientation(east).   // and orientation
    <- !explore;
       !find(gold).
 
++!update_direcao
+	<- ?pos(X, Y); 
+	desire_east.
+
 // TODO: não apenas ir reto e virar quando bater ou não achar um local seguro tentar ir tb para locais novos.   
 +!explore : pos(X,Y) & orientation(O) & next_state( s(X,Y,O,_), forward, s(NX,NY,_,_)) 
-   <- .print("doing ",NX ,"," ,NY);
-      forward;
-      !espera;
-      if (bump) {
-      	.print("bump");
-         +wall(NX,NY);
-      } else {
-         -+pos(NX,NY);
-         !update(breeze);
-         !update(stench);
-      }.
+   <- !avanca(NX, NY).
+   
 //TODO não apenas virar tentar decidir locais novos
 +!explore 
    <- .print("no safe place to explore!");
    	  !do(turn(left)).
+
++!avanca(X, Y)
+	<-.print("doing ",X ,"," ,Y);
+      forward;
+      !espera;
+      if (bump) {
+      	.print("bump");
+         +wall(X,Y);
+      } else {
+         -+pos(X,Y);
+         !update(breeze);
+         !update(stench);
+      }.
 
 +!do(forward)
   	<- shoot;
