@@ -46,8 +46,10 @@ might_be_pit(X,Y) :-  adjacent(X,Y,X2,Y2) & breeze(X2,Y2). // might have a pit, 
 ~wumpus(X,Y) :- adjacent(X,Y,X2,Y2) & ~stench(X2,Y2).
 ~wumpus(X,Y) :- wall(X,Y).
 
-wumpus_north(X,Y) :- stench(X,Y-1) & ~wumpus(X-1,Y-1) & ~wumpus(X,Y-2) & ~wumpus(X+1,Y-1). // p1
-wumpus_west(X,Y) :- stench(X+1,Y) & ~wumpus(X+2,Y) & ~wumpus(X+1,Y-1) & ~wumpus(X+1,Y+1). // p2
-wumpus_east(X,Y) :- stench(X,Y+1) & ~wumpus(X-1,Y+1) & ~wumpus(X,Y+2) & ~wumpus(X+1,Y+1). // p3
-wumpus_south(X,Y) :- stench(X-1,Y) & ~wumpus(X-2,Y) & ~wumpus(X-1,Y-1) & ~wumpus(X-1,Y+1). // p4
+not_wumpus(X,Y) :- ~stench(X,Y) | wall(X,Y) .//| pit(X,Y).
+
+wumpus_north(X,Y) :- stench(X,Y-1) & (stench(X-1,Y) | stench(X+1,Y)) & not_wumpus(X-1,Y-2) & not_wumpus(X+1,Y-2). // p1
+wumpus_south(X,Y) :- stench(X,Y+1) & (stench(X-1,Y) | stench(X+1,Y)) & not_wumpus(X-1,Y+2) & not_wumpus(X+1,Y+2). // p3
+wumpus_west(X,Y) :- stench(X+1,Y) & (stench(X,Y-1) | stench(X,Y+1)) & not_wumpus(X-2,Y+1) & not_wumpus(X-2,Y-1). // p2
+wumpus_east(X,Y) :- stench(X-1,Y) & (stench(X,Y-1) | stench(X,Y+1)) & not_wumpus(X-2,Y+1) & not_wumpus(X-2,Y-1). // p4
 
