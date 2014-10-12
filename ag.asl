@@ -158,7 +158,8 @@ desire(east).
 
 +!sair : pos(1,1).
 +!sair : pos(MyX,MyY) & orientation(O) &
-      search( [p(0,[s(MyX,MyY,O,no)],[])], s(1,1,_,_), [Action|_])
+    // h( s(MyX,MyY,O,yes), s(1,1,_,_), H )
+      search( [p(0,[s(MyX,MyY,O,yes)],[])], s(1,1,_,_), [Action|_])
    <- if(Action = forward){
     	!avanca;
     	!sair;
