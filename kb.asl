@@ -50,8 +50,21 @@ not_wumpus(X,Y) :- ~stench(X,Y) | wall(X,Y) | pit(X,Y).
 look_vertical(X,Y) :- stench(X,Y-1) & stench(X,Y+1).
 look_horizontal(X,Y) :- stench(X-1,Y) & stench(X+1,Y).
 
-wumpus_north(X,Y) :- (look_vertical(X,Y)) | (stench(X,Y-1) & (stench(X-1,Y) | stench(X+1,Y)) & not_wumpus(X-1,Y-2) & not_wumpus(X+1,Y-2)). // p1
-wumpus_south(X,Y) :- (look_vertical(X,Y)) | (stench(X,Y+1) & (stench(X-1,Y) | stench(X+1,Y)) & not_wumpus(X-1,Y+2) & not_wumpus(X+1,Y+2)). // p3
-wumpus_west(X,Y) :- (look_horizontal(X,Y)) | (stench(X+1,Y) & (stench(X,Y-1) | stench(X,Y+1)) & not_wumpus(X-2,Y+1) & not_wumpus(X-2,Y-1)). // p2
-wumpus_east(X,Y) :- (look_horizontal(X,Y)) | (stench(X-1,Y) & (stench(X,Y-1) | stench(X,Y+1)) & not_wumpus(X-2,Y+1) & not_wumpus(X-2,Y-1)). // p4
+
+wumpus_north(X,Y) :- (look_vertical(X,Y)) | 
+	(stench(X,Y-1) & (stench(X-1,Y) | stench(X+1,Y)) & not_wumpus(X-1,Y-2) & not_wumpus(X+1,Y-2)) |
+	(stench(X,Y-1) & wall(X+1,Y-1) & wall(X-1,Y-1) & not_wumpus(X+1, Y-2) & not_wumpus(X-1, Y-2))
+	. // p1
+wumpus_south(X,Y) :- (look_vertical(X,Y)) | 
+	(stench(X,Y+1) & (stench(X-1,Y) | stench(X+1,Y)) & not_wumpus(X-1,Y+2) & not_wumpus(X+1,Y+2)) |
+	(stench(X,Y+1) & wall(X+1,Y+1) & wall(X-1,Y+1) & not_wumpus(X+1, Y+2) & not_wumpus(X-1, Y+2))
+	. // p3
+wumpus_west(X,Y) :- (look_horizontal(X,Y)) | 
+	(stench(X+1,Y) & (stench(X,Y-1) | stench(X,Y+1)) & not_wumpus(X-2,Y+1) & not_wumpus(X-2,Y-1)) |
+	(stench(X+1,Y) & wall(X-1,Y-1) & wall(X-1,Y+1) & not_wumpus(X-2, Y-1) & not_wumpus(X-2, Y+1))
+	. // p2
+wumpus_east(X,Y) :- (look_horizontal(X,Y)) | 
+	(stench(X-1,Y) & (stench(X,Y-1) | stench(X,Y+1)) & not_wumpus(X-2,Y+1) & not_wumpus(X-2,Y-1)) |
+	(stench(X-1,Y) & wall(X-1,Y-1) & wall(X-1,Y+1) & not_wumpus(X-2, Y-1) & not_wumpus(X-2, Y+1))
+	. // p4
 

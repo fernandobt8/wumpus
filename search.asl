@@ -47,6 +47,11 @@ next_state( s(X,Y,west,G),   forward, s(X-1,Y,west,G))  :- not wall(X-1,Y) & saf
 next_state( s(X,Y,north,G),  forward, s(X,Y+1,north,G)) :- not wall(X,Y+1) & safe(X,Y+1).
 next_state( s(X,Y,south,G),  forward, s(X,Y-1,south,G)) :- not wall(X,Y-1) & safe(X,Y-1).
 
+next_state_not_safe( s(X,Y,east,G),   forward, s(X+1,Y,east,G))  :- not wall(X+1,Y).
+next_state_not_safe( s(X,Y,west,G),   forward, s(X-1,Y,west,G))  :- not wall(X-1,Y).
+next_state_not_safe( s(X,Y,north,G),  forward, s(X,Y+1,north,G)) :- not wall(X,Y+1).
+next_state_not_safe( s(X,Y,south,G),  forward, s(X,Y-1,south,G)) :- not wall(X,Y-1).
+
 next_state( s(X,Y,east,G),  turn(left), s(X,Y,north,G)).
 next_state( s(X,Y,north,G), turn(left), s(X,Y,west,G)).
 next_state( s(X,Y,west,G),  turn(left), s(X,Y,south,G)).

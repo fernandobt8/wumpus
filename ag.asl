@@ -9,7 +9,8 @@
 pos(1,1).            // my initial location
 orientation(east).   // and orientation 
 visited(pos(1, 1), 1, 0). //posicao, numero de vezes que passou procurando, e numero de vezes que passou tentando sair
-desire(east).   
+desire(east).
+max_visited(0).   
 // scenario borders
 // borders(BottomLeftX, BottomLeftY, TopRightX, TopRightY) 
 //borders(1, 1, 4, 4). // for R&N
@@ -23,7 +24,7 @@ desire(east).
 
 +!main
    <- 
-   	//.wait(5000);
+   	.wait(5000);
    	!update(breeze); // update perception for location 1,1
     !update(stench);
     !kill_wumpus;
@@ -131,7 +132,7 @@ desire(east).
          !update(breeze);
          !update(stench);
       }.
-+!avanca : pos(X,Y) & orientation(O) & not next_state( s(X,Y,O,_), forward, s(NX,NY,_,_)) & best(B) & B > 2
++!avanca : pos(X,Y) & orientation(O) & next_state_not_safe( s(X,Y,O,_), forward, s(NX,NY,_,_)) & max_visited(B) & B > 5
 	<-.print("doing not safe ",NX ,"," ,NY);
       forward;
       !espera;
@@ -168,6 +169,7 @@ desire(east).
 
 +!quit_cave
    <- +saindo;
+   	  -+max_visited(0);
       .print("I am leaving the cave!!!");
       !sair;
       climb.
@@ -199,7 +201,7 @@ desire(east).
    !avanca;
    !sair;.
     
-+!espera <- .wait(100).
++!espera <- .wait(80).
  
 +glitter 
    <- grab;
@@ -207,11 +209,13 @@ desire(east).
       +has_gold.
 
 // update beliefs using a coordinate system
-+!increment_visited(X,Y) : not saindo & visited(pos(X,Y),N,NS) <- -visited(pos(X,Y),N,NS); +visited(pos(X,Y),N+1,NS).
-+!increment_visited(X,Y) : not saindo <- +visited(pos(X,Y), 1, 0).
++!increment_visited(X,Y) : not saindo & visited(pos(X,Y),N,NS) <- -visited(pos(X,Y),N,NS); +visited(pos(X,Y),N+1,NS); !update_max(N+1).
++!increment_visited(X,Y) : not saindo <- +visited(pos(X,Y), 1, 0);!update_max(1).
 
-+!increment_visited(X,Y) : saindo & visited(pos(X,Y),N,NS) <- -visited(pos(X,Y),N,NS); +visited(pos(X,Y),N,NS+1).
-+!increment_visited(X,Y) : saindo <- +visited(pos(X,Y), 0, 1).
++!increment_visited(X,Y) : saindo & visited(pos(X,Y),N,NS) <- -visited(pos(X,Y),N,NS); +visited(pos(X,Y),N,NS+1); !update_max(NS+1).
++!increment_visited(X,Y) : saindo <- +visited(pos(X,Y), 0, 1);!update_max(1).
+
++!update_max(M) <- ?max_visited(MA); if(MA < M){-+max_visited(M);}.
 
 +?get_visited(X,Y,N) : not saindo & visited(pos(X,Y),N,NS).
 +?get_visited(X,Y,N) : not saindo & not visited(pos(X,Y),N,NS) <- +visited(pos(X,Y), 0, 0); ?get_visited(X,Y,N).
