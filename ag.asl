@@ -65,7 +65,7 @@ risk(6).
 
 +!update_wumpus : pos(MyX,MyY) & wumpus_north(MyX,MyY+1) <- !wumpus_north.
 +!update_wumpus : pos(MyX,MyY) & wumpus_south(MyX,MyY-1) <- !wumpus_south.
-+!update_wumpus : pos(MyX,MyY) & .print("teste east",MyX+1,MyY) & wumpus_east(MyX+1,MyY)  <- !wumpus_east.
++!update_wumpus : pos(MyX,MyY) & wumpus_east(MyX+1,MyY)  <- !wumpus_east.
 +!update_wumpus : pos(MyX,MyY) & wumpus_west(MyX-1,MyY)  <- !wumpus_west.
 +!update_wumpus.
 
