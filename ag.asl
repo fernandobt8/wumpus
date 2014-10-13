@@ -8,7 +8,7 @@
 
 pos(1,1).            // my initial location
 orientation(east).   // and orientation 
-visited(pos(1, 1), 1).
+visited(pos(1, 1), 1, 0). //posicao, numero de vezes que passou procurando, e numero de vezes que passou tentando sair
 desire(east).   
 // scenario borders
 // borders(BottomLeftX, BottomLeftY, TopRightX, TopRightY) 
@@ -23,6 +23,7 @@ desire(east).
 
 +!main
    <- 
+   	//.wait(5000);
    	!update(breeze); // update perception for location 1,1
     !update(stench);
     !kill_wumpus;
@@ -31,8 +32,7 @@ desire(east).
 
 +!kill_wumpus : has_shooted.
 +!kill_wumpus 
-	<- .print("update w");
-	   !update_wumpus;
+	<- !update_wumpus;
 	   !explore;		
 	   !kill_wumpus.
 
@@ -72,9 +72,8 @@ desire(east).
    <- !explore;
       !find(gold).
 
-+!update_direcao
++!update_direcao(O)
 	<- ?pos(X, Y);
-	   ?orientation(O);
 	   //primeiro deseja continuar em frente
 	   ?next_position(X,Y,O,NX,NY);
 	   //pega numero de visitas no local que deseja ir
@@ -105,9 +104,10 @@ desire(east).
 	   if((V4 < B2 & not wall(NX4,NY4)) | (wall(NX,NY) & wall(NX2,NY2) & wall(NX3,NY3) &  not wall(NX4,NY4))){
 	   	-+desire(O4);
 	   }.
-+!update_best(V, Best).
+
 +!explore 
-   <- !update_direcao;
+   <- ?orientation(O);
+      !update_direcao(O);
    	  ?desire(D);
    	  !girar_para(D);
       !avanca.
@@ -116,10 +116,23 @@ desire(east).
 +!girar_para(O) : pos(MyX,MyY) & orientation(O2) &
       next_state(s(MyX,MyY,O2,_), Action, s(MyX,MyY,O,_))
       <- !do(Action); !girar_para(O).
-+!girar_para(O) <- !do(turn(left)).
++!girar_para(O) <- !do(turn(left)); !girar_para(O).
 
 +!avanca : pos(X,Y) & orientation(O) & next_state( s(X,Y,O,_), forward, s(NX,NY,_,_))
 	<-.print("doing ",NX ,"," ,NY);
+      forward;
+      !espera;
+      if (bump) {
+      	.print("bump");
+         +wall(NX,NY);
+      } else {
+         -+pos(NX,NY);
+         !increment_visited(NX,NY);
+         !update(breeze);
+         !update(stench);
+      }.
++!avanca : pos(X,Y) & orientation(O) & not next_state( s(X,Y,O,_), forward, s(NX,NY,_,_)) & best(B) & B > 2
+	<-.print("doing not safe ",NX ,"," ,NY);
       forward;
       !espera;
       if (bump) {
@@ -138,11 +151,11 @@ desire(east).
 
 +!do(shoot)
   	<- shoot;
-  	   .print("atirei-----------------------------------");
+  	   .print("atirei");
   	   !espera;
 	   if(scream){
 	   	+killed;
-	   	.print("aew morreu fdp");
+	   	.print("aew morreu");
 	   }
 	   +has_shooted.
 
@@ -154,47 +167,57 @@ desire(east).
       !update(orientation(O),D).
 
 +!quit_cave
-   <- 
-   .print("I am leaving the cave!!!");
+   <- +saindo;
+      .print("I am leaving the cave!!!");
       !sair;
       climb.
 
 +!sair : pos(1,1).
 +!sair 
    <- ?pos(X,Y);
-   if(X < 1){
-   		!girar_para(east);
-    	!avanca;
-    	!sair;
-    }
-    if(X > 1){
-		!girar_para(west);
-    	!avanca;
-    	!sair;   
-    }
-    if(Y < 1){
-		!girar_para(north);
-    	!avanca;
-    	!sair;   
-    }
-    if(Y > 1){
-		!girar_para(south);
-    	!avanca;
-    	!sair;   
-    }.
+   DX = math.abs(X-1);
+   DY = math.abs(Y-1);
+   if(DX <= DY){
+   		if(Y < 1){
+			!update_direcao(north);
+		}else {	   
+			if(Y > 1){
+				!update_direcao(south);
+			}
+		}
+   }else{
+   		if(X < 1){
+   			!update_direcao(east);
+    	}else {
+    		if(X > 1){
+				!update_direcao(west);
+    		}	
+    	}
+   }
+   ?desire(D);
+   !girar_para(D);
+   !avanca;
+   !sair;.
     
 +!espera <- .wait(100).
  
 +glitter 
    <- grab;
+   	  .print("achei la plata!!");
       +has_gold.
 
 // update beliefs using a coordinate system
-+!increment_visited(X,Y) : visited(pos(X,Y),N) <- -visited(pos(X,Y),N); +visited(pos(X,Y),N+1).
-+!increment_visited(X,Y) <- +visited(pos(X,Y), 1).
++!increment_visited(X,Y) : not saindo & visited(pos(X,Y),N,NS) <- -visited(pos(X,Y),N,NS); +visited(pos(X,Y),N+1,NS).
++!increment_visited(X,Y) : not saindo <- +visited(pos(X,Y), 1, 0).
 
-+?get_visited(X,Y,N) :  visited(pos(X,Y),N).
-+?get_visited(X,Y,N) : not visited(pos(X,Y),N) <- +visited(pos(X,Y), 0); ?get_visited(X,Y,N).
++!increment_visited(X,Y) : saindo & visited(pos(X,Y),N,NS) <- -visited(pos(X,Y),N,NS); +visited(pos(X,Y),N,NS+1).
++!increment_visited(X,Y) : saindo <- +visited(pos(X,Y), 0, 1).
+
++?get_visited(X,Y,N) : not saindo & visited(pos(X,Y),N,NS).
++?get_visited(X,Y,N) : not saindo & not visited(pos(X,Y),N,NS) <- +visited(pos(X,Y), 0, 0); ?get_visited(X,Y,N).
+
++?get_visited(X,Y,NS) : saindo & visited(pos(X,Y),N,NS).
++?get_visited(X,Y,NS) : saindo & not visited(pos(X,Y),N,NS) <- +visited(pos(X,Y), 0, 0); ?get_visited(X,Y,NS).
 
 +!update(breeze) : not breeze[source(percept)] & pos(X,Y) <- +~breeze(X,Y). 
 +!update(breeze) :     breeze[source(percept)] & pos(X,Y) <- +breeze(X,Y).  

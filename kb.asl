@@ -46,7 +46,7 @@ might_be_pit(X,Y) :-  adjacent(X,Y,X2,Y2) & breeze(X2,Y2). // might have a pit, 
 ~wumpus(X,Y) :- adjacent(X,Y,X2,Y2) & ~stench(X2,Y2).
 ~wumpus(X,Y) :- wall(X,Y).
 
-not_wumpus(X,Y) :- ~stench(X,Y) | wall(X,Y) .//| pit(X,Y).
+not_wumpus(X,Y) :- ~stench(X,Y) | wall(X,Y) | pit(X,Y).
 look_vertical(X,Y) :- stench(X,Y-1) & stench(X,Y+1).
 look_horizontal(X,Y) :- stench(X-1,Y) & stench(X+1,Y).
 
