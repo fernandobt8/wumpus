@@ -1,7 +1,92 @@
+[ag] teste east21
 [ag] doing 2,1
+[ag] teste east31
 [ag] doing 3,1
+[ag] teste east41
+[ag] doing 4,1
+[ag] teste east51
+[ag] doing 5,1
+[ag] teste east61
+[ag] doing 6,1
+[ag] teste east71
+[ag] doing 7,1
+[ag] bump
+[ag] teste east71
+[ag] doing 6,0
+[ag] bump
+[ag] teste east71
+[ag] doing 6,2
+[ag] bump
+[ag] teste east71
+[ag] doing 5,1
+[ag] teste east61
+[ag] doing 5,2
+[ag] teste east62
+[ag] doing 5,3
+[ag] teste east63
+[ag] doing 5,4
+[ag] teste east64
+[ag] doing 5,5
+[ag] teste east65
+[ag] doing 5,6
+[ag] teste east66
+[ag] doing 5,7
+[ag] teste east67
+[ag] doing 5,8
+[ag] bump
+[ag] teste east67
+[ag] doing 6,7
+[ag] teste east77
+[ag] doing 7,7
+[ag] bump
+[ag] teste east77
+[ag] doing 6,6
+[ag] teste east76
+[ag] atirei
+[ag] aew morreu
+[ag] doing 7,6
+[ag] doing 8,6
+[ag] bump
+[ag] doing 7,5
+[ag] bump
+[ag] doing 6,6
+[ag] doing 6,5
+[ag] doing 6,4
+[ag] doing 6,3
+[ag] doing 7,3
+[ag] bump
+[ag] doing 5,3
+[ag] doing 4,3
+[ag] doing 3,3
+[ag] doing 2,3
+[ag] bump
+[ag] doing 3,4
+[ag] doing 3,5
+[ag] doing 3,6
 [ag] not safe girando
 [ag] not safe girando
+[ag] doing 3,5
+[ag] doing 2,5
+[ag] not safe girando
+[ag] doing 2,4
+[ag] bump
+[ag] not safe girando
+[ag] not safe girando
+[ag] doing 3,5
+[ag] doing 4,5
+[ag] doing 4,4
+[ag] doing 4,3
+[ag] doing 4,2
+[ag] doing 3,2
+[ag] bump
+[ag] doing 5,2
+[ag] doing 4,2
+[ag] doing 4,1
+[ag] doing 4,0
+[ag] bump
+[ag] doing 3,1
+[ag] doing 3,0
+[ag] bump
 [ag] doing 2,1
 [ag] doing 2,2
 [ag] bump
@@ -16,18 +101,73 @@
 [ag] bump
 [ag] doing 2,1
 [ag] doing 3,1
-[ag] not safe girando
-[ag] not safe girando
-[ag] doing 2,1
-[ag] doing 1,1
-[ag] doing 2,1
-[ag] doing 3,1
-[ag] not safe girando
-[ag] not safe girando
-[ag] doing 2,1
-[ag] doing 1,1
-[ag] doing 2,1
-[ag] doing 3,1
-[ag] doing not safe 4,1
+[ag] doing 4,1
 [ag] doing 5,1
-[ag] No failure event was generated for +!avanca[code(forward),code_line(124),code_src("ag.asl"),error(action_failed),error_msg(""),source(self)]
+[ag] doing 5,0
+[ag] bump
+[ag] doing 6,1
+[ag] doing 5,1
+[ag] doing 5,2
+[ag] doing 5,3
+[ag] doing 5,4
+[ag] doing 5,5
+[ag] doing 5,6
+[ag] doing 4,6
+[ag] doing 4,7
+[ag] bump
+[ag] doing 4,5
+[ag] doing 4,4
+[ag] doing 3,4
+[ag] doing 3,3
+[ag] doing 3,4
+[ag] doing 4,4
+[ag] doing 5,4
+[ag] doing 6,4
+[ag] doing 7,4
+[ag] bump
+[ag] doing 6,3
+[ag] doing 6,4
+[ag] doing 6,5
+[ag] doing 6,6
+[ag] doing 6,7
+[ag] doing 6,8
+[ag] bump
+[ag] doing 5,7
+[ag] doing 6,7
+[ag] doing 5,7
+[ag] doing 5,6
+[ag] doing 4,6
+[ag] doing 3,6
+[ag] not safe girando
+[ag] doing 3,5
+[ag] doing 2,5
+[ag] not safe girando
+[ag] not safe girando
+[ag] doing 3,5
+[ag] doing 4,5
+[ag] doing 5,5
+[ag] doing 6,5
+[ag] doing 6,4
+[ag] doing 6,3
+[ag] doing 5,3
+[ag] doing 4,3
+[ag] doing 3,3
+[ag] doing 3,4
+[ag] doing 4,4
+[ag] doing 5,4
+[ag] doing 5,5
+[ag] doing 5,6
+[ag] doing 4,6
+[ag] doing 3,6
+[ag] not safe girando
+[ag] doing 3,5
+[ag] doing 2,5
+[ag] not safe girando
+[ag] not safe girando
+[ag] doing 3,5
+[ag] doing 4,5
+[ag] doing 4,6
+[ag] doing 3,6
+[ag] doing not safe 2,6
+[ag] doing 1,6
+[ag] No failure event was generated for +!avanca[code(forward),code_line(125),code_src("ag.asl"),error(action_failed),error_msg(""),source(self)]

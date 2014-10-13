@@ -10,7 +10,8 @@ pos(1,1).            // my initial location
 orientation(east).   // and orientation 
 visited(pos(1, 1), 1, 0). //posicao, numero de vezes que passou procurando, e numero de vezes que passou tentando sair
 desire(east).
-max_visited(0).   
+max_visited(0).
+risk(6). 
 // scenario borders
 // borders(BottomLeftX, BottomLeftY, TopRightX, TopRightY) 
 //borders(1, 1, 4, 4). // for R&N
@@ -24,7 +25,7 @@ max_visited(0).
 
 +!main
    <- 
-   	.wait(5000);
+   //	.wait(5000);
    	!update(breeze); // update perception for location 1,1
     !update(stench);
     !kill_wumpus;
@@ -64,7 +65,7 @@ max_visited(0).
 
 +!update_wumpus : pos(MyX,MyY) & wumpus_north(MyX,MyY+1) <- !wumpus_north.
 +!update_wumpus : pos(MyX,MyY) & wumpus_south(MyX,MyY-1) <- !wumpus_south.
-+!update_wumpus : pos(MyX,MyY) & wumpus_east(MyX+1,MyY)  <- !wumpus_east.
++!update_wumpus : pos(MyX,MyY) & .print("teste east",MyX+1,MyY) & wumpus_east(MyX+1,MyY)  <- !wumpus_east.
 +!update_wumpus : pos(MyX,MyY) & wumpus_west(MyX-1,MyY)  <- !wumpus_west.
 +!update_wumpus.
 
@@ -132,8 +133,9 @@ max_visited(0).
          !update(breeze);
          !update(stench);
       }.
-+!avanca : pos(X,Y) & orientation(O) & next_state_not_safe( s(X,Y,O,_), forward, s(NX,NY,_,_)) & max_visited(B) & B > 5
++!avanca : pos(X,Y) & orientation(O) & next_state_not_safe( s(X,Y,O,_), forward, s(NX,NY,_,_)) & max_visited(B) & risk(R) & B > R
 	<-.print("doing not safe ",NX ,"," ,NY);
+      -+risk(R+6);
       forward;
       !espera;
       if (bump) {
