@@ -23,7 +23,7 @@ desire(east).
 
 +!main
    <- 
-   	//.wait(5000);
+   	.wait(5000);
    	!update(breeze); // update perception for location 1,1
     !update(stench);
     !kill_wumpus;

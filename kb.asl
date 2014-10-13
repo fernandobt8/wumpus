@@ -60,7 +60,7 @@ wumpus_south(X,Y) :- (look_vertical(X,Y)) |
 	. // p3
 wumpus_west(X,Y) :- (look_horizontal(X,Y)) | 
 	(stench(X+1,Y) & (stench(X,Y-1) | stench(X,Y+1)) & not_wumpus(X-2,Y+1) & not_wumpus(X-2,Y-1)) |
-	(stench(X+1,Y) & not_wumpus(X+2,Y) & not_wumpus(X-1,Y-1) & not_wumpus(X-1,Y+1) & not_wumpus(X-2, Y-1) & not_wumpus(X-2, Y+1))
+	(stench(X+1,Y) & not_wumpus(X+2,Y) & not_wumpus(X+1,Y-1) & not_wumpus(X+1,Y+1) & not_wumpus(X+2, Y-1) & not_wumpus(X+2, Y+1))
 	. // p2
 wumpus_east(X,Y) :- (look_horizontal(X,Y)) | 
 	(stench(X-1,Y) & (stench(X,Y-1) | stench(X,Y+1)) & not_wumpus(X-2,Y+1) & not_wumpus(X-2,Y-1)) |
