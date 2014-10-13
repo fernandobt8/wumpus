@@ -31,7 +31,8 @@ desire(east).
 
 +!kill_wumpus : has_shooted.
 +!kill_wumpus 
-	<- !update_wumpus;
+	<- .print("update w");
+	   !update_wumpus;
 	   !explore;		
 	   !kill_wumpus.
 
@@ -60,14 +61,11 @@ desire(east).
      !do(shoot);
      !wumpus_west.   
 
-+!update_wumpus : pos(MyX,MyY) &     wumpus_north(MyX,MyY+1) <- !wumpus_north.
-+!update_wumpus : pos(MyX,MyY) & not wumpus_north(MyX,MyY+1) <- +~wumpus_north.
-+!update_wumpus : pos(MyX,MyY) &     wumpus_south(MyX,MyY-1) <- !wumpus_south.
-+!update_wumpus : pos(MyX,MyY) & not wumpus_south(MyX,MyY-1) <- +~wumpus_south.
-+!update_wumpus : pos(MyX,MyY) &     wumpus_east(MyX+1,MyY)  <- !wumpus_east.
-+!update_wumpus : pos(MyX,MyY) & not wumpus_east(MyX+1,MyY)  <- +~wumpus_east.
-+!update_wumpus : pos(MyX,MyY) &     wumpus_west(MyX-1,MyY)  <- !wumpus_west.
-+!update_wumpus : pos(MyX,MyY) & not wumpus_west(MyX-1,MyY)  <- +~wumpus_west.
++!update_wumpus : pos(MyX,MyY) & wumpus_north(MyX,MyY+1) <- !wumpus_north.
++!update_wumpus : pos(MyX,MyY) & wumpus_south(MyX,MyY-1) <- !wumpus_south.
++!update_wumpus : pos(MyX,MyY) & wumpus_east(MyX+1,MyY)  <- !wumpus_east.
++!update_wumpus : pos(MyX,MyY) & wumpus_west(MyX-1,MyY)  <- !wumpus_west.
++!update_wumpus.
 
 +!find(gold) : has_gold.
 +!find(gold) 
@@ -81,30 +79,33 @@ desire(east).
 	   ?next_position(X,Y,O,NX,NY);
 	   //pega numero de visitas no local que deseja ir
 	   ?get_visited(NX,NY,V);
-	   if(not wall(NX,NY)){
-	   	-+desire(O);
-	   }
+	   -+best(V);
+	   -+desire(O);
 	   //vai na direção que visitou menos
 	   ?next_orientation(O,O2);
 	   ?next_position(X,Y,O2,NX2,NY2);
 	   ?get_visited(NX2,NY2,V2);
-	   if(V2 < V & not wall(NX2,NY2) | wall(NX,NY) & not wall(NX2,NY2)){
+	   ?best(B);
+	   if((V2 < B & not wall(NX2,NY2)) | (wall(NX,NY) & not wall(NX2,NY2))){
+	   	-+best(V2);
 	   	-+desire(O2);
 	   }
 	   ?next_orientation(O2,O3);
 	   ?next_position(X,Y,O3,NX3,NY3);
 	   ?get_visited(NX3,NY3,V3);
-	   if(V3 < V2 & not wall(NX3,NY3) | wall(NX2,NY2) & not wall(NX3,NY3)){
+	   ?best(B1);
+	   if((V3 < B1 & not wall(NX3,NY3)) | (wall(NX,NY) & wall(NX2,NY2) & not wall(NX3,NY3))){
+	   	-+best(V3);
 	   	-+desire(O3);
 	   }
 	   ?next_orientation(O3,O4);
 	   ?next_position(X,Y,O4,NX4,NY4);
 	   ?get_visited(NX4,NY4,V4);
-	   if(V4 < V3 & not wall(NX4,NY4) | wall(NX3,NY3) & not wall(NX4,NY4)){
+	   ?best(B2);
+	   if((V4 < B2 & not wall(NX4,NY4)) | (wall(NX,NY) & wall(NX2,NY2) & wall(NX3,NY3) &  not wall(NX4,NY4))){
 	   	-+desire(O4);
 	   }.
-
-// TODO: não apenas ir reto e virar quando bater ou não achar um local seguro tentar ir tb para locais novos.   
++!update_best(V, Best).
 +!explore 
    <- !update_direcao;
    	  ?desire(D);
@@ -130,7 +131,8 @@ desire(east).
          !update(breeze);
          !update(stench);
       }.
-+!avanca <- .print("not safe girando");
++!avanca 
+	<- .print("not safe girando");
 	!do(turn(left));
 	!avanca.
 
@@ -152,7 +154,8 @@ desire(east).
       !update(orientation(O),D).
 
 +!quit_cave
-   <- .print("I am leaving the cave!!!");
+   <- 
+   .print("I am leaving the cave!!!");
       !sair;
       climb.
 
