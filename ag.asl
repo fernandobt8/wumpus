@@ -131,19 +131,6 @@ desire(east).
          !update(breeze);
          !update(stench);
       }.
-+!avanca : pos(X,Y) & orientation(O) & not next_state( s(X,Y,O,_), forward, s(NX,NY,_,_)) & best(B) & B > 2
-	<-.print("doing not safe ",NX ,"," ,NY);
-      forward;
-      !espera;
-      if (bump) {
-      	.print("bump");
-         +wall(NX,NY);
-      } else {
-         -+pos(NX,NY);
-         !increment_visited(NX,NY);
-         !update(breeze);
-         !update(stench);
-      }.
 +!avanca 
 	<- .print("not safe girando");
 	!do(turn(left));
