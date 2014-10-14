@@ -1,9 +1,4 @@
-
 /* A* implementation to find paths */
-
-// search(OpenStates, Goal, Solution)
-// each element of OpenStates is a path p(F value,[current state, previous states...],[last action, previous actions])
-// a state is s(X,Y,O,G), X,Y are location, O is orientation, G is true if carrying gold
 
 { register_function("search.h",2,"h") }
 
@@ -53,36 +48,3 @@ next_state( s(X,Y,west,G),  turn(left), s(X,Y,south,G)).
 next_state( s(X,Y,south,G), turn(left), s(X,Y,east,G)).
 
 next_state( s(X,Y,OldOr,G),  turn(right), s(X,Y,NewOr,G)) :- next_state( s(X,Y,NewOr,G), turn(left), s(X,Y,OldOr,G)).
-
-// OLD code
-
-/* // simple implementation of Depth-first searchto find paths
-search( [p([GoalState|Path],Actions) | _], GoalState, p([GoalState|Path],Actions)).
-
-search( [p([State|Path],PrevActions)|Open], GoalState, Solution) :-
-   State \== GoalState & 
-   .findall(
-        p([NewState, State|Path],[Action|PrevActions]), // new paths 
-        ( next_state(State,Action,NewState) & not .member(NewState, [State|Path])), 
-        Suc) &
-   .concat( Open, Suc, NewOpen) &
-   search( NewOpen, GoalState, Solution).
-
-*/
-
-/*
-// a insertion-sort algorithm used to include new states in open
-// the order is defined by f, f = g + h
-// g is the depth, h is the expected distance + right orientation
-insert_all([], L, L, _).
-insert_all([H|T],L1,L2,Goal) :- insert(H,L1,L1H,Goal) & insert_all(T,L1H,L2,Goal).
-
-insert(P,[],    [P],     _).
-insert(P,[A|L], [P,A|L], Goal) :- better(P,A,Goal).
-insert(P,[A|L], [A|L2],  Goal) :- insert(P,L,L2,Goal). 
-   
-//better(P1, P2,Goal) :- f(P1,F1,Goal) & f(P2,F2,Goal) & F1 < F2.
-
-better(p(F1,_,_), p(F2,_,_),Goal) :- F1 < F2.
-*/
-
